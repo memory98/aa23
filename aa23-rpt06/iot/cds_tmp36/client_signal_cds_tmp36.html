@@ -18,7 +18,7 @@
 
 <h3 align="center"> on Time: <span id="time"> </span> </h3> 
 
-<h3 align="center"> Signal (temp) : <span id="data"> </span> </h3> 
+<h3 align="center"> Signal (temp, lumi) : <span id="data"> </span> </h3> 
 
 <hr>
 
@@ -40,7 +40,7 @@
             
             // Display signal on web browser           
             ctime.innerHTML = msg[0];
-            cdata.innerHTML = msg[1]; // + "," + msg[2] + "," + msg[3];
+            cdata.innerHTML = msg[1] + "," + msg[2]; // + "," + msg[3];
         });
     });    
 

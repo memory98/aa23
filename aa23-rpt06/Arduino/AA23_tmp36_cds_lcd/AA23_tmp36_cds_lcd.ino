@@ -58,7 +58,7 @@ void loop(){
   Serial.print(tempC);
   Serial.print(",");
   Serial.println(lux);
-  delay(100);
+  delay(1000);
 }
 
 //Voltage to Lux
