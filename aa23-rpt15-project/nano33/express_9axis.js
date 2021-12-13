@@ -32,10 +32,9 @@ var iotSchema = new Schema({
     mag_x : String,
     mag_y : String,
     mag_z : String
-},{
+}, {
     versionKey : false
-}
-);
+});
 var Sensor = mongoose.model("Sensor",iotSchema);  // sensor data model
 
 // Web routing address

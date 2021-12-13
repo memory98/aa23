@@ -33,16 +33,17 @@ var axisSchema = new Schema({
     mag_x : String,
     mag_y : String,
     mag_z : String
-},{
+}, {
     versionKey : false
 });
 // Display data on console in the case of saving data.
 axisSchema.methods.info = function () {
-    var axisInfo = this.date
-    ? "Current date: " + this.date +", accel_x : " + this.accel_x 
-    + ", accel_y : " + this.accel_y + ", accel_z : " + this.accel_z +", gyro_x : " + this.gyro_x 
-    + ", gyro_y : " + this.gyro_y + ", gyro_z : " + this.gyro_z + ", mag_x: " + this.mag_x  
-    + ", mag_y : " + this.mag_y + ", mag_z: " + this.mag_z : "I don't have a date"
+    var axisInfo = this.date ?
+    "Current date: " + this.date 
+    + ", accel_x : " + this.accel_x  + ", accel_y : " + this.accel_y + ", accel_z : " + this.accel_z 
+    + ", gyro_x : " + this.gyro_x + ", gyro_y : " + this.gyro_y + ", gyro_z : " + this.gyro_z 
+    + ", mag_x: " + this.mag_x + ", mag_y : " + this.mag_y + ", mag_z: " + this.mag_z : "I don't have a date";
+
     console.log("axisInfo: " + axisInfo);
 }
 
@@ -89,7 +90,7 @@ var sixth = 0;
 var seventh = 0;
 var eighth = 0;
 var nineth = 0;
-var tenth = 0;
+
 var Sensor = mongoose.model("Sensor", axisSchema);  // sensor data model
 
 // process data using parser
@@ -104,20 +105,23 @@ parser.on('data', (data) => { // call back when data is received
     seventh = readData.indexOf(',',sixth+1);
     eighth = readData.indexOf(',',seventh+1);
     nineth = readData.indexOf(',',eighth+1);
+    tenth = readData.indexOf(',', nineth+1);
+
     // parsing data into signals
     if (readData.lastIndexOf(',') > first && first > 0) {
-        accel_x = readData.substring(first + 1, second);
-        accel_y = readData.substring(second + 1, third);
-        accel_z = readData.substring(third + 1, fourth );
-        gyro_x = readData.substring(fourth +1, fifth );
-        gyro_y = readData.substring(fifth +1,sixth );
-        gyro_z = readData.substring(sixth +1,seventh );
-        mag_x = readData.substring(seventh +1,eighth );
-        mag_y = readData.substring(eighth +1,nineth );
+        accel_x = readData.substring(first+1, second);
+        accel_y = readData.substring(second+1, third);
+        accel_z = readData.substring(third+1, fourth);
+        gyro_x = readData.substring(fourth+1, fifth);
+        gyro_y = readData.substring(fifth+1,sixth);
+        gyro_z = readData.substring(sixth+1,seventh);
+        mag_x = readData.substring(seventh+1,eighth);
+        mag_y = readData.substring(eighth+1,nineth);
         mag_z = readData.substring(readData.lastIndexOf(',')+1);
         readData = '';
         
         dStr = getDateString();
+
         mdata[0]=dStr;   
         mdata[1]=accel_x;   
         mdata[2]=accel_y;  
@@ -128,8 +132,12 @@ parser.on('data', (data) => { // call back when data is received
         mdata[7]=mag_x;       
         mdata[8]=mag_y;
         mdata[9]=mag_z;
+        
         //console.log(mdata);
-        var axisData = new Sensor({date:dStr, accel_x:accel_x, accel_y:accel_y, accel_z:accel_z, gyro_x:gyro_x, gyro_y:gyro_y, gyro_z:gyro_z, mag_x:mag_x, mag_y:mag_y, mag_z:mag_z});
+        var axisData = new Sensor({date:dStr, accel_x:accel_x, accel_y:accel_y, accel_z:accel_z
+                                            , gyro_x:gyro_x, gyro_y:gyro_y, gyro_z:gyro_z
+                                            , mag_x:mag_x, mag_y:mag_y, mag_z:mag_z})
+
         // save axis data to MongoDB
         axisData.save(function(err,data) {
             if(err) return handleEvent(err);
